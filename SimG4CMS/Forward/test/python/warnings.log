@@ -1,0 +1,6 @@
+----- Begin Fatal Exception 23-May-2017 13:03:47 CEST-----------------------
+An exception of category 'PluginNotFound' occurred while
+   [0] Constructing the EventProcessor
+Exception Message:
+Unable to find plugin 'ProtonTransportFunctionsESSource' in category 'CMS EDM Framework ParameterSet Description'. Please check spelling of name.
+----- End Fatal Exception -------------------------------------------------
