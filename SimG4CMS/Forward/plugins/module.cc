@@ -38,3 +38,9 @@ DEFINE_SIMWATCHER (ZdcTestAnalysis);
 DEFINE_SIMWATCHER (DoCastorAnalysis);
 DEFINE_SIMWATCHER (TotemTestGem);
 DEFINE_SIMWATCHER (BscTest);
+
+
+#include "SimG4CMS/Forward/interface/CTPPS_Diamond_SD.h"
+
+typedef   CTPPS_Diamond_SD CTPPSDiamondSensitiveDetector;
+DEFINE_SENSITIVEDETECTOR(CTPPSDiamondSensitiveDetector);

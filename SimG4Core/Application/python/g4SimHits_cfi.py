@@ -411,6 +411,11 @@ g4SimHits = cms.EDProducer("OscarMTProducer",
     TotemSD = cms.PSet(
         Verbosity = cms.untracked.int32(0)
     ),
+
+     CTPPS_Diamond_SD = cms.PSet(
+        Verbosity = cms.untracked.int32(0)
+    ),
+
     ZdcSD = cms.PSet(
         Verbosity = cms.int32(0),
         UseShowerLibrary = cms.bool(True),
