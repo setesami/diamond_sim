@@ -6,7 +6,6 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include <iostream>
-// #define debug
 
 CTPPSDiamondNumberingScheme::CTPPSDiamondNumberingScheme(int i)
 {
@@ -15,5 +14,5 @@ CTPPSDiamondNumberingScheme::CTPPSDiamondNumberingScheme(int i)
 
 CTPPSDiamondNumberingScheme::~CTPPSDiamondNumberingScheme()
 {
-  edm::LogInfo("TotemRP") << " Deleting CTPPSDiamondNumberingScheme" << std::endl;
+  edm::LogInfo("Diamond") << " Deleting CTPPSDiamondNumberingScheme" << std::endl;
 }

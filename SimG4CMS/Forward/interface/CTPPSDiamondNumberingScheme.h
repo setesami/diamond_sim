@@ -7,13 +7,13 @@
 
 #include "SimG4CMS/Forward/interface/CTPPSDiamondOrganization.h"
 
-class CTPPSDiamondNumberingScheme : public CTPPSDiamondOrganization {
-
-public:
-  CTPPSDiamondNumberingScheme(int i);
-  ~CTPPSDiamondNumberingScheme();
+class CTPPSDiamondNumberingScheme : public CTPPSDiamondOrganization 
+{
+  public:
+    CTPPSDiamondNumberingScheme(int i);
+    ~CTPPSDiamondNumberingScheme();
 	 
-//  virtual unsigned int GetUnitID(const G4Step* aStep) const ;
+    //  virtual unsigned int GetUnitID(const G4Step* aStep) const ;
 
 };
 

@@ -12,19 +12,19 @@
 
 class CTPPSDiamondOrganization : public CTPPSVDetectorOrganization
 {
- public:
-          CTPPSDiamondOrganization();
-  virtual ~CTPPSDiamondOrganization();
+  public:
+    CTPPSDiamondOrganization();
+    virtual ~CTPPSDiamondOrganization();
  
-  uint32_t GetUnitID(const G4Step* aStep);
-  uint32_t GetUnitID(const G4Step* aStep) const;
+    uint32_t GetUnitID(const G4Step* aStep);
+    uint32_t GetUnitID(const G4Step* aStep) const;
 
- private:
-        unsigned int theArm ;
-        unsigned int theStation;
-        unsigned int theRoman_pot;
-        unsigned int thePlane;
-        unsigned int theDetector ;
+  private:
+    unsigned int theArm ;
+    unsigned int theStation;
+    unsigned int theRoman_pot;
+    unsigned int thePlane;
+    unsigned int theDetector ;
 
 };
 

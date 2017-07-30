@@ -21,8 +21,6 @@
 #include "SimDataFormats/TrackingHit/interface/UpdatablePSimHit.h"
 #include "SimDataFormats/SimHitMaker/interface/TrackingSlaveSD.h"
 
-//#include "Geometry/Vector/interface/LocalPoint.h"
-//#include "Geometry/Vector/interface/LocalVector.h"
 #include "DataFormats/GeometryVector/interface/LocalPoint.h"
 #include "DataFormats/GeometryVector/interface/LocalVector.h"
 
@@ -57,13 +55,11 @@ CTPPS_Diamond_SD::CTPPS_Diamond_SD(std::string name, const DDCompactView & cpv, 
 CTPPS_Diamond_SD::initRun();
 
 
-  collectionName.insert(name);
-std::cout<<"collectionName[0]: "<<collectionName[0]<<std::endl;
-  
+  collectionName.insert(name);  
   edm::ParameterSet m_Anal = p.getParameter<edm::ParameterSet>("CTPPS_Diamond_SD");
   verbosity_ = m_Anal.getParameter<int>("Verbosity");
   
-// LogDebug("TotemRP")
+  // LogDebug("CTPPS_Diamond")
   std::cout
     << "*******************************************************\n"
     << "*                                                     *\n"
@@ -74,39 +70,36 @@ std::cout<<"collectionName[0]: "<<collectionName[0]<<std::endl;
 
   slave  = new TrackingSlaveSD(name);
 
-std::cout<<"MoHSENNNNNNNNNNNNNNNNNNNNNNN"<<std::endl;
-  //
-  // Now attach the right detectors (LogicalVolumes) to me
-  //
   
-  //std::vector<std::string> lvNames = SensitiveDetectorCatalog::instance()->logicalNames(name);
+  // Now attach the right detectors (LogicalVolumes) to me
+  
+  
   std::vector<std::string> lvNames = clg.logicalNames(name);
   this->Register();
-  for (std::vector<std::string>::iterator it=lvNames.begin();  it !=lvNames.end(); it++)
+  for (std::vector<std::string>::iterator it=lvNames.begin();  it !=lvNames.end(); it++) 
   {
+  
 
-std::cout<<"name: "<<name<<std::endl;
-std::cout<<"lvNames: "<<*it<<std::endl;
     this->AssignSD(*it);
-    edm::LogInfo("CTPPS_Diamond_SD") << "CTPPS_Diamond_SD : Assigns SD to LV " << (*it);
+    edm::LogInfo("CTPPS_Diamond") << "CTPPS_Diamond_SD : Assigns SD to LV " << (*it);
   }
 
-std::cout<<"Register and Assign the right detector "<<std::endl;
+  //std::cout<<"Register and Assign the right detector "<<std::endl;
   
 
   if (name == "CTPPSDiamondHits")  
-{
+  {
 
     numberingScheme = dynamic_cast<CTPPSVDetectorOrganization*>(new CTPPSDiamondNumberingScheme(3));
-std::cout<<"find PPSTimingHits as name "<<std::endl;
+    //std::cout<<"find PPSTimingHits as name "<<std::endl;
   }
   else 
   {
-    edm::LogWarning("CTPPS_Diamond_SD") << "CTPPS_Diamond_SD: ReadoutName not supported\n";
+    edm::LogWarning("CTPPS_Diamond") << "CTPPS_Diamond_SD: ReadoutName not supported\n";
   }
   
-  edm::LogInfo("CTPPS_Diamond_SD") << "CTPPS_Diamond_SD: Instantiation completed";
-  std::cout << "CTPPS_Diamond_SD: Instantiation completed"<<std::endl;
+  edm::LogInfo("CTPPS_Diamond") << "CTPPS_Diamond_SD: Instantiation completed";
+  std::cout << "CTPPS_Diamond: Instantiation completed"<<std::endl;
 
 }
 
@@ -120,41 +113,38 @@ CTPPS_Diamond_SD::~CTPPS_Diamond_SD()
 }
 
 void CTPPS_Diamond_SD::Initialize(G4HCofThisEvent * HCE) {
-  LogDebug("CTPPS_Diamond_SD") << "CTPPS_Diamond_SD : Initialize called for " << name;
+  LogDebug("CTPPS_Diamond") << "CTPPS_Diamond_SD : Initialize called for " << name;
 
-std::cout << "CTPPS_Diamond_SD: Initialize called for:   " << name<<std::endl<<std::endl<<std::endl;
+  //std::cout << "CTPPS_Diamond_SD: Initialize called for:   " << name<<std::endl<<std::endl<<std::endl;
   theHC = new CTPPS_Diamond_G4HitCollection(name, collectionName[0]);
   if (hcID<0) 
     hcID = G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
-  HCE->AddHitsCollection(hcID, theHC);
+    HCE->AddHitsCollection(hcID, theHC);
 }
 
 
 void CTPPS_Diamond_SD::Print_Hit_Info()
 {
-//  LogDebug("CTPPS_Diamond_SD")
-std::cout 
-<< theTrack->GetDefinition()->GetParticleName()
-       << " PPS_Timing_SD CreateNewHit for"
-       << " PV "     << currentPV->GetName()
-       << " PVid = " << currentPV->GetCopyNo()
-       //<< " MVid = " << currentPV->GetMother()->GetCopyNo()
-       << " Unit "   << unitID;
-  //LogDebug("CTPPS_Diamond_SD") 
-std::cout
-<< " primary "    << primaryID
-       << " time slice " << tSliceID 
-       << " of energy " << theTrack->GetTotalEnergy()
-       << " Eloss " << Eloss
-       << " positions ";
-       printf("(%10f,%10f,%10f)",preStepPoint->GetPosition().x(),preStepPoint->GetPosition().y(),preStepPoint->GetPosition().z());
-       printf("(%10f,%10f,%10f)",postStepPoint->GetPosition().x(),postStepPoint->GetPosition().y(),postStepPoint->GetPosition().z());
-//  LogDebug("CTPPS_Diamond_SD") 
-std::cout
-<< " positions " << "(" <<postStepPoint->GetPosition().x()<<","<<postStepPoint->GetPosition().y()<<","<<postStepPoint->GetPosition().z()<<")"
-       << " For Track  " << theTrack->GetTrackID()
-       << " which is a " << theTrack->GetDefinition()->GetParticleName()
-       << " ParentID is " << theTrack->GetParentID()<<std::endl<<std::endl;
+  LogDebug("CTPPS_Diamond")
+  << theTrack->GetDefinition()->GetParticleName()
+  << " PPS_Timing_SD CreateNewHit for"
+  << " PV "     << currentPV->GetName()
+  << " PVid = " << currentPV->GetCopyNo()
+  //<< " MVid = " << currentPV->GetMother()->GetCopyNo()
+  << " Unit "   << unitID;
+  LogDebug("CTPPS_Diamond") 
+  << " primary "    << primaryID
+  << " time slice " << tSliceID 
+  << " of energy " << theTrack->GetTotalEnergy()
+  << " Eloss " << Eloss
+  << " positions ";
+  printf("(%10f,%10f,%10f)",preStepPoint->GetPosition().x(),preStepPoint->GetPosition().y(),preStepPoint->GetPosition().z());
+  printf("(%10f,%10f,%10f)",postStepPoint->GetPosition().x(),postStepPoint->GetPosition().y(),postStepPoint->GetPosition().z());
+  LogDebug("CTPPS_Diamond") 
+  << " positions " << "(" <<postStepPoint->GetPosition().x()<<","<<postStepPoint->GetPosition().y()<<","<<postStepPoint->GetPosition().z()<<")"
+  << " For Track  " << theTrack->GetTrackID()
+  << " which is a " << theTrack->GetDefinition()->GetParticleName()
+  << " ParentID is " << theTrack->GetParentID()<<std::endl<<std::endl;
      
   if(theTrack->GetTrackID()==1)
   {
@@ -180,77 +170,36 @@ G4bool CTPPS_Diamond_SD::ProcessHits(G4Step * aStep, G4TouchableHistory * )
 {
   if (aStep == NULL)
   {	    
-std::cout<<"CTPPS_TIMING : There is no hit to process"<<std::endl<<std::endl;
-  	return true;
+    //std::cout<<"CTPPS_TIMING : There is no hit to process"<<std::endl<<std::endl;
+    return true;
   }
   else
   {
  
+    //std::cout
+    // << "*******************************************************\n"
+    // << "*                                                     *\n"
+    // << "* PPS Diamond Hit initialized  with name " << name << "\n" 
+    // << "*                                                     *\n" 
+    // << "*******************************************************" << std::endl;
 
-//std::cout
-  //  << "*******************************************************\n"
-   // << "*                                                     *\n"
-  //  << "* PPS Diamond Hit initialized  with name " << name << "\n" 
- //   << "*                                                     *\n" 
- //   << "*******************************************************" << std::endl;
 
 
-   // G4Track* myTrack;
-//myTrack = aStep->GetTrack();
-//theTrack = aStep->GetTrack();
-//currentPV=aStep->GetPreStepPoint()->GetPhysicalVolume();
-//preStepPoint=aStep->GetPreStepPoint();
-//postStepPoint=aStep->GetPostStepPoint();
-
-   GetStepInfo(aStep);
+    GetStepInfo(aStep);
  
-//    if(theTrack->GetDefinition()->GetParticleName()=="proton")  
-if(theTrack->GetDefinition()->GetPDGEncoding()==2212)  
-{
-std::cout<<"theTrack->GetDefinition()->GetPDGEncoding()"<<theTrack->GetDefinition()->GetPDGEncoding()<<std::endl;
- //Print_Hit_Info();
+    if(theTrack->GetDefinition()->GetPDGEncoding()==2212)  
+      {
+	//Print_Hit_Info();
+	ImportInfotoHit();    //in addtion to import info to hit it STORE hit as well
+	std::cout<<("CTPPS_Diamond")<<"New hit created"<<std::endl;
 
-
-}
-
-  ImportInfotoHit();    // added pps //in addtion to import info to hit it STORE hit as well
-
-//}
-
-
-   if(Vz>100000 && theTrack->GetDefinition()->GetParticleName()!="proton")
-
-// if(IsPrimary(theTrack))
-
-//{
-//std::cout<<"This is a Primary track"<<std::endl;
-//      Print_Hit_Info();
-      
-
-//}
-	  //if(Eloss>0.0 /*&& ParticleType==2212 && Pabs > 6000. */)
-    //{
+      }
 
 
 
-// TrackInformation * trkInfo = (TrackInformation *)(theTrack->GetUserInformation());
-//if (trkInfo) {
 
-//if (!(trkInfo->isPrimary())){
-//if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName()=="window_box"&&theTrack->GetDefinition()== G4OpticalPhoton::OpticalPhotonDefinition())
-//theTrack->SetTrackStatus(fStopAndKill);
-//}
-//}
-
-// if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName()=="window_box"&&theTrack->GetDefinition()== G4OpticalPhoton::OpticalPhotonDefinition())
-//  clearTrack(theTrack);   //added pps
- //  theTrack->SetTrackStatus(fStopAndKill);
-
-
-      std::cout<<("CTPPS_Diamond_SD")<<"New hit created"<<std::endl;
-	    return true;
-	  //}
-	}
+      return true;
+  }
 }
 
 
@@ -259,61 +208,40 @@ void CTPPS_Diamond_SD::GetStepInfo(G4Step* aStep)
  
 
   theTrack = aStep->GetTrack();   
-
   preStepPoint = aStep->GetPreStepPoint(); 
   postStepPoint = aStep->GetPostStepPoint(); 
-//  theLocalEntryPoint = SensitiveDetector::InitialStepPosition(aStep,LocalCoordinates);  
-//  theLocalExitPoint = SensitiveDetector::FinalStepPosition(aStep,LocalCoordinates);
+  //  theLocalEntryPoint = SensitiveDetector::InitialStepPosition(aStep,LocalCoordinates);  
+  //  theLocalExitPoint = SensitiveDetector::FinalStepPosition(aStep,LocalCoordinates);
   hitPoint = preStepPoint->GetPosition();
-   exitPoint = postStepPoint->GetPosition();
-
-   // std::cout<<"hitPoint"<<hitPoint<<std::endl;
-   // std::cout<<"exitPoint"<<exitPoint<<std::endl;
-
-
- currentPV = preStepPoint->GetPhysicalVolume();
+  exitPoint = postStepPoint->GetPosition();
+  currentPV = preStepPoint->GetPhysicalVolume();
   theLocalEntryPoint = SetToLocal(hitPoint);
-   theLocalExitPoint = SetToLocal(exitPoint);
-
-  //added pps
+  theLocalExitPoint = SetToLocal(exitPoint);
   theglobaltimehit=preStepPoint->GetGlobalTime()/nanosecond;
   incidentEnergy=(aStep->GetPreStepPoint()->GetTotalEnergy()/eV);
-
-
   tSlice = (postStepPoint->GetGlobalTime() )/nanosecond;
   tSliceID = (int) tSlice;
   unitID = setDetUnitId(aStep);
 
   if(verbosity_)
-    LogDebug("CTPPS_Diamond_SD") << "UNITa " << unitID <<std::endl;
+    LogDebug("CTPPS_Diamond") << "UNITa " << unitID <<std::endl;
 
   primaryID = theTrack->GetTrackID();
-
   Pabs = (aStep->GetPreStepPoint()->GetMomentum().mag())/GeV;
   p_x = (aStep->GetPreStepPoint()->GetMomentum().x())/GeV;
   p_y = (aStep->GetPreStepPoint()->GetMomentum().y())/GeV;
   p_z = (aStep->GetPreStepPoint()->GetMomentum().z())/GeV;
-//pps change post to pre
  Tof = aStep->GetPreStepPoint()->GetGlobalTime()/nanosecond;  
-//pps coment  Eloss = aStep->GetTotalEnergyDeposit()/GeV;
  Eloss = (aStep->GetPreStepPoint()->GetTotalEnergy()/eV); //pps added 
  ParticleType = theTrack->GetDefinition()->GetPDGEncoding();
 
   //corrected phi and theta treatment
   G4ThreeVector gmd  = aStep->GetPreStepPoint()->GetMomentumDirection();
   // convert it to local frame
-  G4ThreeVector lmd = ((G4TouchableHistory *)(aStep->GetPreStepPoint()->GetTouchable()))->GetHistory()
-    ->GetTopTransform().TransformAxis(gmd);
+  G4ThreeVector lmd = ((G4TouchableHistory *)(aStep->GetPreStepPoint()->GetTouchable()))->GetHistory()->GetTopTransform().TransformAxis(gmd);
   Local3DPoint lnmd = ConvertToLocal3DPoint(lmd);
   ThetaAtEntry = lnmd.theta();
-  PhiAtEntry = lnmd.phi();
-
-//  ThetaAtEntry     = aStep->GetPreStepPoint()->GetPosition().theta()/deg;
-//  PhiAtEntry       = aStep->GetPreStepPoint()->GetPosition().phi()/deg;
-
-//  LogDebug("CTPPS_Diamond_SD") << "UUUUUUUNNNNNNNNNNIIIIIIIIIITTTTTTTTTTTTTIIIIDDDD " << 
-//    numberingScheme->GetUnitID(aStep) << std::endl ;
- 
+  PhiAtEntry = lnmd.phi(); 
 
  if(IsPrimary(theTrack))
     ParentId = 0;
@@ -327,8 +255,7 @@ void CTPPS_Diamond_SD::GetStepInfo(G4Step* aStep)
 
 uint32_t CTPPS_Diamond_SD::setDetUnitId(G4Step * aStep)
 { 
-//  LogDebug("CTPPS_Diamond_SD")<< "ALL'INTERNO DI SETDETUNITID PER IL DETECTOR "<< name << std::endl;
-//  LogDebug("CTPPS_Diamond_SD") << "PIANO " << numberingScheme->GetCurrentPlane()<<std::endl;
+  //LogDebug("CTPPS_Diamond") << "numbering " << numberingScheme->GetCurrentPlane()<<std::endl;
   return (numberingScheme == 0 ? 0 : numberingScheme->GetUnitID(aStep));
 }
 
@@ -338,7 +265,7 @@ void CTPPS_Diamond_SD::StoreHit(CTPPS_Diamond_G4Hit* hit)
   if (hit == 0 )
   {
     if(verbosity_)
-      LogDebug("CTPPS_Diamond_SD") << "CTPPS_Diamond_SD: hit to be stored is NULL !!" <<std::endl;
+      LogDebug("CTPPS_Diamond") << "CTPPS_Diamond: hit to be stored is NULL !!" <<std::endl;
     return;
   }
 
@@ -350,42 +277,30 @@ void CTPPS_Diamond_SD::ImportInfotoHit()    // added pps
 {
   currentHit = new CTPPS_Diamond_G4Hit;
   currentHit->setTrackID(primaryID);
-   currentHit->setTimeSlice(tSlice);
-
+  currentHit->setTimeSlice(tSlice);
   currentHit->setUnitID(unitID);
   currentHit->setIncidentEnergy(incidentEnergy);
-
   currentHit->setPabs(Pabs);
-currentHit->setTof(Tof);
-   currentHit->setEnergyLoss(Eloss);
+  currentHit->setTof(Tof);
+  currentHit->setEnergyLoss(Eloss);
   currentHit->setParticleType(ParticleType);
   currentHit->setThetaAtEntry(ThetaAtEntry);
   currentHit->setPhiAtEntry(PhiAtEntry);
-
   currentHit->setEntry(hitPoint);
   currentHit->setExit(exitPoint);
-
- currentHit->setLocalEntry(hitPoint);
- currentHit->setLocalExit(exitPoint);
-
-//  currentHit->setLocalEntry(theLocalEntryPoint);
-// currentHit->setLocalExit(theLocalExitPoint);
-
+  currentHit->setLocalEntry(hitPoint);
+  currentHit->setLocalExit(exitPoint);
   currentHit->setParentId(ParentId);
   currentHit->setVx(Vx);
   currentHit->setVy(Vy);
-  currentHit->setVz(Vz);
-  
+  currentHit->setVz(Vz); 
   currentHit->set_p_x(p_x);
   currentHit->set_p_y(p_y);
   currentHit->set_p_z(p_z);
-
-  // pps added
   currentHit->setGlobalTimehit(Globaltimehit);
 
-
   StoreHit(currentHit);
-// LogDebug("CTPPS_Diamond_SD") << "STORED HIT IN: " << unitID << std::endl;
+  // LogDebug("CTPPS_Diamond") << "STORED HIT IN: " << unitID << std::endl;
 }	 
 
 
@@ -405,20 +320,18 @@ void CTPPS_Diamond_SD::EndOfEvent(G4HCofThisEvent* )
   for (int j=0; j<theHC->entries() && j<15000; j++)
   {
     CTPPS_Diamond_G4Hit* aHit = (*theHC)[j];
-    //Local3DPoint theEntrance(aHit->getEntry().x(),aHit->getEntry().y(),aHit->getEntry().z());
-    //Local3DPoint theExitPoint(aHit->getExit().x(),aHit->getExit().y(),aHit->getExit().z());
     
     Local3DPoint Entrata(aHit->getLocalEntry().x(),
-       aHit->getLocalEntry().y(),
-       aHit->getLocalEntry().z());
+			 aHit->getLocalEntry().y(),
+			 aHit->getLocalEntry().z());
     Local3DPoint Uscita(aHit->getLocalExit().x(),
-       aHit->getLocalExit().y(),
-       aHit->getLocalExit().z());
+			aHit->getLocalExit().y(),
+			aHit->getLocalExit().z());
     slave->processHits(PSimHit(Entrata,Uscita,
-             aHit->getPabs(), aHit->getTof(),
-             aHit->getEnergyLoss(), aHit->getParticleType(),
-             aHit->getUnitID(), aHit->getTrackID(),
-             aHit->getThetaAtEntry(),aHit->getPhiAtEntry()));
+			       aHit->getPabs(), aHit->getTof(),
+			       aHit->getEnergyLoss(), aHit->getParticleType(),
+			       aHit->getUnitID(), aHit->getTrackID(),
+			       aHit->getThetaAtEntry(),aHit->getPhiAtEntry()));
   }
   Summarize();
 }
@@ -441,11 +354,12 @@ void CTPPS_Diamond_SD::DrawAll()
 
 void CTPPS_Diamond_SD::PrintAll()
 {
-  LogDebug("CTPPS_Diamond_SD") << "CTPPS_Diamond_SD: Collection " << theHC->GetName() << std::endl;
+  LogDebug("CTPPS_Diamond") << "CTPPS_Diamond: Collection " << theHC->GetName() << std::endl;
   //theHC->PrintAllHits();
 } 
 
-void CTPPS_Diamond_SD::fillHits(edm::PSimHitContainer& c, std::string n) {
+void CTPPS_Diamond_SD::fillHits(edm::PSimHitContainer& c, std::string n) 
+{
   if (slave->name() == n) c=slave->hits();
 }
 
@@ -457,11 +371,12 @@ void CTPPS_Diamond_SD::SetNumberingScheme(CTPPSVDetectorOrganization* scheme)
   numberingScheme = scheme;
 }
 
-void CTPPS_Diamond_SD::update(const BeginOfEvent * i){
-  //  LogDebug("CTPPS_Diamond_SD") <<" Dispatched BeginOfEvent !"<<std::endl;
+void CTPPS_Diamond_SD::update(const BeginOfEvent * i)
+{
+  //  LogDebug("CTPPS_Diamond") <<" Dispatched BeginOfEvent !"<<std::endl;
   clearHits();
   eventno = (*i)()->GetEventID();
-std::cout<<"#######################Begin of Event number: "<<eventno<<std::endl<<std::endl;
+  //std::cout<<"#######################Begin of Event number: "<<eventno<<std::endl<<std::endl;
 
 }
 
@@ -470,28 +385,27 @@ void CTPPS_Diamond_SD::update (const ::EndOfEvent*)
 }
 
 
-//pps added
-void CTPPS_Diamond_SD::clearTrack( G4Track * track){
+void CTPPS_Diamond_SD::clearTrack( G4Track * track)
+{
     track->SetTrackStatus(fStopAndKill);   
 }
 
 
-void CTPPS_Diamond_SD::clearHits(){
+void CTPPS_Diamond_SD::clearHits()
+{
   slave->Initialize();
 }
 
 bool CTPPS_Diamond_SD::IsPrimary(const G4Track * track)
 {
-  TrackInformation* info 
-    = dynamic_cast<TrackInformation*>( track->GetUserInformation() );
+  TrackInformation* info = dynamic_cast<TrackInformation*>( track->GetUserInformation() );
   return info && info->isPrimary();
 }
 
 
 
-void CTPPS_Diamond_SD::initRun(){
-// construct your own material properties for setting refractionindex and so on
-  // theMaterialProperties = new TimingMaterialProperties(theMPDebug_);
- //  theMaterialProperties = new TimingMaterialProperties(3);
+void CTPPS_Diamond_SD::initRun()
+{
+  // construct your own material properties for setting refractionindex and so on
 
 }
